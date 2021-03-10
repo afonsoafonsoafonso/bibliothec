@@ -58,9 +58,9 @@
 \pagestyle{fancy}                % pages have headers and footers
 \fancyhead{}                     % Blank out the default header
 \fancyfoot{}                     % Blank out the default footer
-\fancyhead[LO,RE]{Exemplo de artigo em \LaTeX} % Custom header text
+\fancyhead[LO,RE]{Bibliothec} % Custom header text
 \fancyhead[RO,LE]{\thepage}      % Custom header text
-\fancyfoot[RO,LE]{Grupo xx, \today} % Custom footer text
+\fancyfoot[RO,LE]{Grupo H, \today} % Custom footer text
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -80,7 +80,7 @@
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
 
-\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{BOOK PROJ}} % Article title
+\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{Bibliothec}} % Article title
 
 \author{Afonso Mendonça\\
 \small \texttt{up201706708@fe.up.pt}\\
@@ -98,7 +98,10 @@ Pasit Khantigul\\
 \vspace{-5mm}
 }
 
-\date{\today}
+\date{
+    \vspace{10mm}
+    \today
+}
 
 %----------------------------------------------------------------------------------------
 
@@ -113,7 +116,7 @@ Pasit Khantigul\\
 
 \begin{abstract}
 
-The proposed project, \textbf{MUSIC PROJ}, is a full-stack application capable of displaying book-related information. It is divided into two components: backend and user interface. The backend will be responsible for gathering literature information from DBpedia’s API that will be shown according to the user’s search. The user interface will arrange this information in a visually appealing way inciting the user to explore and learn more about their favorite books, authors and subjects. 
+The proposed project, \textbf{Bibliothec}, is a full-stack application capable of displaying book-related information. It is divided into two components: backend and user interface. The backend will be responsible for gathering literature information from DBpedia’s API that will be shown according to the user’s search. The user interface will arrange this information in a visually appealing way inciting the user to explore and learn more about their favorite books, authors and subjects. 
 
 \end{abstract}
 
@@ -146,16 +149,16 @@ Responsible for the connection to DBpedia’s API and subsequent queries to fetc
 
 The data will be provided by DBpedia, as expected. The user will start by filling the search field to create a query whose result will be filtered according to the available entity types. The several fields related to the query result will be displayed, where some are static, giving plain information, and others can link to other entities of the types below. By expanding those relationships, the user can then explore different subjects, authors, books, publishers, etc.
 
-\begin{dataFigure}
+\begin{dataFigure}\hspace{5mm}
     \centering\includegraphics[width=1.0\linewidth]{dataModel.jpg}
     \captionof{figure}{Data model}
-\end{dataFigure}
+\end{dataFigure}\hspace{5mm}
 
 These are the entity types we found out to be consistent and relevant, but these may change during development. There are other many other fields and relationships to entities that are relevant but turn out to be inconsistent, not existing in, for example, every book, like mentioned before. In the other hand, there's a lot of fields and relationships that are consistent but aren't relevant to the user experience.
 
 %------------------------------------------------
 
-\section{State of the Art}\label{sec:conclusions}
+\section{State of the Art}\label{sec:state of the art}
 
  In an era of growing applications, those related to books aren’t an exception. As a result of this, there are apps that are well established on this market such as amazon kindle, Goodreads, Blinkist. They share the same key features: allow a user to get to know more about books. Besides allowing the user to explore, search, read and get to know more about a book’s information such as its abstract, author, etc., each app features a unique feature.
 
@@ -167,7 +170,7 @@ These are the entity types we found out to be consistent and relevant, but these
 
 %------------------------------------------------
 
-\section{Schedule}\label{sec:conclusions}
+\section{Schedule}\label{sec:schedule}
 
 The schedule is reflected in the Gantt chart below.
 
