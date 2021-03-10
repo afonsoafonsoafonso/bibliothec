@@ -21,6 +21,7 @@
 \usepackage{booktabs}           % Horizontal rules in tables
 \usepackage{float}              % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
 \usepackage{paralist}           % Used for the compactitem environment which makes bullet points with less space between them
+\usepackage{pdfpages}
 
 % geometry package
 \usepackage[outer=20mm,inner=20mm,vmargin=15mm,includehead,includefoot,headheight=15pt]{geometry}
@@ -138,7 +139,7 @@ By arranging the information as nodes with edges to related works, authors, subj
 
 \subsection{Backend} \label{backend} 
 
-Responsible for the connection to DBpedia’s API and subsequent queries to fetch user-required information. It will filter the fields and available entities so that the information retrieved to the user is the most relevant possible. This is specially important since every entity can have a lot of types, different fields and information. Having a quality criteria in terms of what entity types and fields we will accept and display is import so that we can keep information as consistent, meaningful and overall of highest quality as possible since there are some fields that don't exist in, for example, every "book" type entity nor does every "book" type entity also has the same number of other entity types.
+Responsible for the connection to DBpedia’s API and subsequent queries to fetch user-required information \cite{dbpedia}. It will filter the fields and available entities so that the information retrieved to the user is the most relevant possible. This is specially important since every entity can have a lot of types, different fields and information. Having a quality criteria in terms of what entity types and fields we will accept and display is import so that we can keep information as consistent, meaningful and overall of highest quality as possible since there are some fields that don't exist in, for example, every "book" type entity nor does every "book" type entity also has the same number of other entity types.
 
 %------------------------------------------------
 
@@ -157,12 +158,12 @@ These are the entity types we found out to be consistent and relevant, but these
 
 \section{State of the Art}\label{sec:conclusions}
 
- In an era of growing applications, those related to books aren’t an exception. As a result of this, there are apps that are well established on this market such as amazon kindle, Goodreads, Blinkist. They share the same key features: allow a user to get to know more about books. Besides allowing the user to explore, search, read and get to know more about a book’s information such as its abstract, author, etc., each app features a unique feature.
+ In an era of growing applications, those related to books aren’t an exception \cite{bookApps}. As a result of this, there are apps that are well established on this market such as  \textbf{Amazon kindle}, \textbf{Goodreads} and \textbf{Blinkist}. They share the same key features: allow a user to get to know more about books. Besides allowing the user to explore, search, read and get to know more about a book’s information such as its abstract, author, etc., each app features a unique feature.
 
 \begin{itemize}
-    \item Amazon Kindle - Page flip, as it mimics the sensation of reading a book instead of a screen
-    \item Goodreads - Barcode scanner that allows adding paper books to a “to read” list
-    \item Blinklist - Allows the user to switch between audio and read mode.
+    \item Amazon Kindle - Page flip, as it mimics the sensation of reading a book instead of a screen \cite{amazonKindle}
+    \item Goodreads - Barcode scanner that allows adding paper books to a “to read” list \cite{goodreads}
+    \item Blinklist - Allows the user to switch between audio and read mode. \cite{blinklist}
 \end{itemize}
 
 %------------------------------------------------
@@ -170,6 +171,9 @@ These are the entity types we found out to be consistent and relevant, but these
 \section{Schedule}\label{sec:conclusions}
 
 The schedule is reflected in the Gantt chart below.
+
+\includepdf[pages=-]{gantt.pdf}
+
 
 %------------------------------------------------
 
@@ -181,6 +185,37 @@ The team is excited to start the development of project. From the challenge of d
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
+\begin{thebibliography}{9}
+\bibitem{dbpedia} 
+DBpedia 
+\url{https://wiki.dbpedia.org/OnlineAccess#1.4\%20REST\%20API}. 
+Last visited on March 2021
+
+
+\bibitem{bookApps} 
+Apps for books
+\url{https://www.intellectsoft.net/blog/best-apps-for-book-lovers/}. 
+Last visited on March 2021
+
+
+\bibitem{amazonKindle} 
+Amazon Kindle
+\url{https://www.amazon.com/kindle-dbs/fd/kcp/ref=klp_mn}. 
+Last visited on March 2021
+
+
+\bibitem{goodreads} 
+Goodreads 
+\url{https://www.goodreads.com/}. 
+Last visited on March 2021
+
+
+\bibitem{blinklist} 
+Blinklist
+\url{https://www.blinkist.com/}. 
+Last visited on March 2021
+
+\end{thebibliography}
 
 %% auto bibliographic list 
 \renewcommand{\bibname}{Referências}
