@@ -4,17 +4,27 @@ import routes from './utils/routes';
 
 import Overview from './pages/Overview';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+
 //import routes from 'utils/routes';
 
-function App() {
+const App = () => {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_CAT_FACT' })
+  }, []);
+
+  console.log(state.dbpedia);
+
   return (
-    <>
       <Router>
         <Switch>
           <Route path={routes.overview} exact component ={Overview}/>
         </Switch>
       </Router>
-    </>
   );
 }
 
