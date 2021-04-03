@@ -19,16 +19,21 @@ class InfoGraph extends Component {
             physics: {
               enabled: true
             },
-            interaction: { multiselect: true, dragView: true }
+            groups: {
+                Authors: {color:{background:'magenta', border:'red'}, borderWidth:1, shape:'circle'},
+                Publishers: {color:{background:'lime', border:'green'}, borderWidth:1, shape:'circle'},
+                Books: {color:{background:'cyan', border:'blue'}, borderWidth:1, shape:'circle'},
+            },
+            interaction: { multiselect: false, dragView: true }
           },
           
           graph: {
             nodes: [
-              { id: 1, label: "Node 1" },
-              { id: 2, label: "Node 2" },
-              { id: 3, label: "Node 3" },
-              { id: 4, label: "Node 4" },
-              { id: 5, label: "Node 5" }
+              { id: 1, group:'Authors', label: "Node 1" },
+              { id: 2, group:'Publishers', label: "Node 2" },
+              { id: 3, group:'Books', label: "Node 3" },
+              { id: 4, group:'Authors', label: "Node 4" },
+              { id: 5, group:'Authors',label: "Node 5" }
             ],
             edges: [
               { from: 1, to: 2 },
@@ -39,42 +44,37 @@ class InfoGraph extends Component {
           },
           counter: 7,
           events: {
-            select: ({ nodes, edges }) => {
+            selectNode: ({nodes}) => {
               console.log("Selected nodes:");
               console.log(nodes);
-              console.log("Selected edges:");
-              console.log(edges);
-              //alert("Selected node: " + nodes);
             },
-            doubleClick: () => {
-              this.addNode();
+            doubleClick: ({ nodes }) => {
+              this.addNode(nodes);
             }
           }
 
         };
     }
 
-    addNode() {
+    addNode(node) {
         this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
             const id = counter + 1;
-            const from = Math.floor(Math.random() * (counter - 1)) + 1;
+            //const from = Math.floor(Math.random() * (counter - 1)) + 1;
             return {
               graph: {
                 nodes: [
                   ...nodes,
-                  {id, label: `Node ${id}`}
+                  {id, group:'Books',label: `Node ${id}`}
                 ],
                 edges: [
                   ...edges,
-                  { from, to: id }
+                  {from: node[0], to: id }
                 ]
               },
               counter: id,
               ...rest
             }
           });
-
-
     }
 
   
