@@ -126,7 +126,7 @@ app.get('/dbpedia/subject/books', async (req, res) => {
   });
 })
 
-app.get('/dbpedia/subject/books', async (req, res) => {
+app.get('/dbpedia/subject/writers', async (req, res) => {
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
       ?obj rdf:type dbo:Writer .
