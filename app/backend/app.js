@@ -47,7 +47,7 @@ app.get('/dbpedia/writer/books', async (req, res) => {
    });
 })
 
-// hmmm dont know if we should keep it as it isnt very easilt filtered. better to keep just the book subjects in the app
+// hmmm dont know if we should keep it as it isnt very easilt filtered. better to keep just the book subjects in the app?
 app.get('/dbpedia/writer/subjects', async (req, res) => {
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
@@ -111,6 +111,20 @@ app.get('/dbpedia/subject/search', async (req, res) => {
     .then((response) => {
       res.send(response.data);
     });
+})
+
+app.get('/dbpedia/subject/books', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+    WHERE {
+      ?obj rdf:type dbo:Book .
+      ?obj rdfs:label ?label .
+      ?obj dct:subject dbc:${req.query.label}
+    }`;
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+  .then((response) => {
+    res.send(response.data);
+  });
 })
 
 // PUBLISHER ENDPOINTS
