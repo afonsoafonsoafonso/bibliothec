@@ -15,13 +15,30 @@ app.get('/dbpedia', async (req, res) => {
     });
 })
 
-app.get('/dbpedia/search', async (req, res) => {
+app.get('/dbpedia/writer/search', async (req, res) => {
   console.log('Request to /dbpedia/search endpoint');
 
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
-      ?obj rdf:type dbo:${req.query.type} .
+      ?obj rdf:type dbo:Writer .
       ?obj rdfs:label ?label .
+      FILTER regex(?label, "${req.query.text}")
+    }`;
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+    .then((response) => {
+      res.send(response.data);
+    });
+})
+
+app.get('/dbpedia/subject/search', async (req, res) => {
+  console.log('Request to /dbpedia/search endpoint');
+
+  const query = `SELECT DISTINCT ?obj, ?label
+    WHERE {
+      ?obj rdf:type skos:Concept .
+      ?obj rdfs:label ?label .
+      FILTER EXISTS { SELECT ?obj2 WHERE { ?obj2 rdf:type dbo:Book . ?obj2 dct:subject ?obj } } .
       FILTER regex(?label, "${req.query.text}")
     }`;
 
