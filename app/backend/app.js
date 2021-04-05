@@ -15,6 +15,8 @@ app.get('/dbpedia', async (req, res) => {
     });
 })
 
+// WRITER ENDPOINTS
+
 app.get('/dbpedia/writer/search', async (req, res) => {
   console.log('Request to /dbpedia/search endpoint');
 
@@ -30,6 +32,40 @@ app.get('/dbpedia/writer/search', async (req, res) => {
       res.send(response.data);
     });
 })
+
+app.get('/dbpedia/writer/books', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+   WHERE {
+     ?obj rdf:type dbo:Book .
+     ?obj rdfs:label ?label .
+     ?obj dbo:author dbr:${req.query.label}
+   }`;
+
+   axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+   .then((response) => {
+     res.send(response.data);
+   });
+})
+
+// BOOK ENDPOINTS
+
+app.get('/dbpedia/book/search', async (req, res) => {
+  console.log('Request to /dbpedia/search endpoint');
+
+  const query = `SELECT DISTINCT ?obj, ?label
+    WHERE {
+      ?obj rdf:type dbo:Book .
+      ?obj rdfs:label ?label .
+      FILTER regex(?label, "${req.query.text}")
+    }`;
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+    .then((response) => {
+      res.send(response.data);
+    });
+})
+
+// SUBJECT ENDPOINTS
 
 app.get('/dbpedia/subject/search', async (req, res) => {
   console.log('Request to /dbpedia/search endpoint');
@@ -48,21 +84,7 @@ app.get('/dbpedia/subject/search', async (req, res) => {
     });
 })
 
-app.get('/dbpedia/book/search', async (req, res) => {
-  console.log('Request to /dbpedia/search endpoint');
-
-  const query = `SELECT DISTINCT ?obj, ?label
-    WHERE {
-      ?obj rdf:type dbo:Book .
-      ?obj rdfs:label ?label .
-      FILTER regex(?label, "${req.query.text}")
-    }`;
-
-  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
-    .then((response) => {
-      res.send(response.data);
-    });
-})
+// PUBLISHER ENDPOINTS
 
 app.get('/dbpedia/publisher/search', async (req, res) => {
   const query = `SELECT DISTINCT ?obj, ?label
