@@ -95,7 +95,6 @@ app.get('/dbpedia/book/subjects', async (req, res) => {
 })
 
 // SUBJECT ENDPOINTS
-// 
 app.get('/dbpedia/subject/search', async (req, res) => {
   console.log('Request to /dbpedia/search endpoint');
 
@@ -117,6 +116,20 @@ app.get('/dbpedia/subject/books', async (req, res) => {
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
       ?obj rdf:type dbo:Book .
+      ?obj rdfs:label ?label .
+      ?obj dct:subject dbc:${req.query.label}
+    }`;
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+  .then((response) => {
+    res.send(response.data);
+  });
+})
+
+app.get('/dbpedia/subject/books', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+    WHERE {
+      ?obj rdf:type dbo:Writer .
       ?obj rdfs:label ?label .
       ?obj dct:subject dbc:${req.query.label}
     }`;
