@@ -49,7 +49,12 @@ class InfoGraph extends Component {
               console.log(nodes);
             },
             doubleClick: ({ nodes }) => {
-              this.addNode(nodes);
+              var groupTypes = ['Books', 'Authors', 'Publishers'];
+              var randomNum = Math.floor(Math.random()*groupTypes.length);
+              if(nodes.length !== 0) {
+                this.addNode(nodes,groupTypes[randomNum]);
+              }
+              
             }
           }
 
@@ -76,7 +81,26 @@ class InfoGraph extends Component {
             }
           });
     }
-
+    addNode(node, groupType) {
+      this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
+        const id = counter + 1;
+        //const from = Math.floor(Math.random() * (counter - 1)) + 1;
+        return {
+          graph: {
+            nodes: [
+              ...nodes,
+              {id, group:groupType,label: `Node ${id}`}
+            ],
+            edges: [
+              ...edges,
+              {from: node[0], to: id }
+            ]
+          },
+          counter: id,
+          ...rest
+        }
+      });
+    }
   
 
     render() {
