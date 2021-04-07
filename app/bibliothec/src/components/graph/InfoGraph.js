@@ -14,22 +14,22 @@ class InfoGraph extends Component {
               color: "#000000"
             },
             nodes: {
-              color: "#888f99"
+              widthConstraint: 50
             },
             physics: {
               enabled: true
             },
             groups: {
-                Authors: {color:{background:'magenta', border:'red'}, borderWidth:1, shape:'circle'},
-                Publishers: {color:{background:'lime', border:'green'}, borderWidth:1, shape:'circle'},
-                Books: {color:{background:'cyan', border:'blue'}, borderWidth:1, shape:'circle'},
+                Authors: {color:{background:'#cc0052', border:'#b30047', highlight: {background:'#b30047', border:'#99003d'}}, borderWidth:1, shape:'dot'},
+                Publishers: {color:{background:'#29a329', border:'#248f24', highlight: {background:'#248f24', border:'#1f7a1f'}}, borderWidth:1, shape:'dot'},
+                Books: {color:{background:'#005ce6', border:'#0052cc', highlight: {background:'#0052cc', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
             },
             interaction: { multiselect: false, dragView: true }
           },
           
           graph: {
             nodes: [
-              { id: 1, group:'Authors', label: "Node 1" },
+              { id: 1, group:'Authors', label: "Node ssssss1"},
               { id: 2, group:'Publishers', label: "Node 2" },
               { id: 3, group:'Books', label: "Node 3" },
               { id: 4, group:'Authors', label: "Node 4" },
