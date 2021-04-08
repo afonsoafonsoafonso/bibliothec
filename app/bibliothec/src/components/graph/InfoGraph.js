@@ -14,7 +14,11 @@ class InfoGraph extends Component {
               color: "#000000"
             },
             nodes: {
-              widthConstraint: 50
+              widthConstraint: 50,
+              fixed: {
+                x:true,
+                y:true
+              },
             },
             physics: {
               enabled: true
@@ -29,11 +33,11 @@ class InfoGraph extends Component {
           
           graph: {
             nodes: [
-              { id: 1, group:'Authors', label: "Node ssssss1"},
-              { id: 2, group:'Publishers', label: "Node 2" },
-              { id: 3, group:'Books', label: "Node 3" },
-              { id: 4, group:'Authors', label: "Node 4" },
-              { id: 5, group:'Authors',label: "Node 5" }
+              { id: 1, group:'Authors', label: "Node ssssss1", x:-250, y:-70},
+              { id: 2, group:'Publishers', label: "Node 2", x:200, y:50},
+              { id: 3, group:'Books', label: "Node 3", x:10, y:-30},
+              { id: 4, group:'Authors', label: "Node 4", x:-100, y:30},
+              { id: 5, group:'Authors',label: "Node 5", x:30, y:100}
             ],
             edges: [
               { from: 1, to: 2 },
@@ -54,10 +58,8 @@ class InfoGraph extends Component {
               if(nodes.length !== 0) {
                 this.addNode(nodes,groupTypes[randomNum]);
               }
-              
             }
           }
-
         };
     }
 
@@ -84,12 +86,26 @@ class InfoGraph extends Component {
     addNode(node, groupType) {
       this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
         const id = counter + 1;
-        //const from = Math.floor(Math.random() * (counter - 1)) + 1;
+        let currNode = this.getChosenNode(node[0]);
+        let x = currNode.x;
+        let y = currNode.y;
+        if(groupType === 'Books') {
+          x += 200;
+          y -= 30;
+        }
+        else if(groupType === 'Authors') {
+          x += 0;
+          y += 200;
+        }
+        else {
+          x -= 200;
+          y -= 30;
+        }
         return {
           graph: {
             nodes: [
               ...nodes,
-              {id, group:groupType,label: `Node ${id}`}
+              {id, group:groupType,label: `Node ${id}`, x, y}
             ],
             edges: [
               ...edges,
@@ -101,6 +117,35 @@ class InfoGraph extends Component {
         }
       });
     }
+
+
+    /*
+    Provavelmente em vez de nx e ny, apenas um incremento / decremento
+    */
+
+    updatePosition(id, nx, ny) {
+      this.setState(({graph:{nodes}}) =>{
+        return {
+          graph: {
+            nodes: [
+              ...nodes.slice(0, id - 1),
+              {
+                ...nodes[id -1],
+                x: nx,
+                y: ny
+              },
+              ...nodes.slice(id)
+            ]
+          }
+
+        }
+      });
+    }
+
+
+    getChosenNode(id){
+      return this.state.graph.nodes[id - 1];
+    } 
   
 
     render() {
