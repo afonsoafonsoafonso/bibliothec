@@ -15,10 +15,15 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+<<<<<<< HEAD
     dispatch({ type: "FETCH_CAT_FACT" });
   }, []);
+=======
+    dispatch({ type: 'FETCH_SPARQL_QUERY' })
+  }, [dispatch]); // dispatch nas dependencias só para calar o warning mesmo
+>>>>>>> master
 
-  console.log(state.dbpedia);
+  console.log(state.dbpedia.queryResult);
 
   return (
     <Router>
