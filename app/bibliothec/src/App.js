@@ -15,23 +15,18 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-<<<<<<< HEAD
-    dispatch({ type: "FETCH_CAT_FACT" });
-  }, []);
-=======
-    dispatch({ type: 'FETCH_SPARQL_QUERY' })
-  }, [dispatch]); // dispatch nas dependencias só para calar o warning mesmo
->>>>>>> master
+    dispatch({ type: 'WRITER_SEARCH', text: 'Rowling' })
+  }, []); // dispatch nas dependencias só para calar o warning mesmo
 
-  console.log(state.dbpedia.queryResult);
 
   return (
+    state.dbpedia.queryResult ?
     <Router>
       <Navbar />
       <Switch>
         <Route path={routes.overview} exact component={Overview} />
       </Switch>
-    </Router>
+    </Router> : null
   );
 };
 
