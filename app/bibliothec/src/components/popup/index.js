@@ -2,6 +2,8 @@ import React from "react";
 import "./style.css";
 import { useDispatch } from "react-redux";
 import { switchPopup } from "../../redux/dbpedia";
+import _ from "lodash";
+
 
 const Popup = ({ name, infos }) => {
   const dispatch = useDispatch();
@@ -16,7 +18,9 @@ const Popup = ({ name, infos }) => {
         <div className="text-content">
           <h2>{name}</h2>
           {infoKeys.map((key) => (
-              <p><b>{key}:</b> {infos[0][key].value}</p>
+            <p>
+              <b>{_.startCase(key)}:</b> {infos[0][key].value}
+            </p>
           ))}
         </div>
       </div>

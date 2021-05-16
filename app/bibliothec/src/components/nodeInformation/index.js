@@ -7,8 +7,11 @@ const NodeInformation = ({ type, name, resourceURL }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
+  // useEffect(() => {
+  //   dispatch({ type: "WRITER_INFORMATION" });
+  // }, []);
   useEffect(() => {
-    dispatch({ type: "WRITER_INFORMATION" });
+    dispatch({ type: "BOOK_INFORMATION" });
   }, []);
 
     return ( state.dbpedia.nodeInformation ? <Popup name={'J.K Rowling'} infos={state.dbpedia.nodeInformation.results.bindings}/> : null);

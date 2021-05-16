@@ -28,7 +28,6 @@ app.get("/dbpedia/writer/information", async (req, res) => {
 WHERE { 
 <${req.query.resource}> 
 dbo:abstract ?abstract ; 
-dbo:thumbnail ?thumbnail; 
 dbo:birthDate ?birthDate ;
 dbo:birthName ?birthName ;
 dbp:birthPlace ?birthPlace . 
@@ -148,6 +147,34 @@ app.get("/dbpedia/book/subjects", async (req, res) => {
       )}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`
     )
     .then((response) => {
+      res.send(response.data);
+    });
+});
+app.get("/dbpedia/book/information", async (req, res) => {
+  console.log("Request to /dbpedia/information endpoint");
+
+  const query = `SELECT DISTINCT 
+?publicationDate ?literatureGenre ?isbn ?abstract
+WHERE { 
+<${req.query.resource}> 
+dbo:abstract ?abstract ;
+dbo:publicationDate ?publicationDate ;
+dbo:literaryGenre ?literatureGenre ;
+dbo:isbn ?isbn . 
+FILTER (lang(?abstract) = 'en')}`;
+  // If I remove dbp it works on live.dbpedia, dunno why
+
+  console.log(encodeURIComponent(query));
+  console.log(req.query.resource);
+
+  axios
+    .get(
+      `https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(
+        query
+      )}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`
+    )
+    .then((response) => {
+      console.log(response.data);
       res.send(response.data);
     });
 });

@@ -72,6 +72,17 @@ export const dbpediaMiddleware =
           })
           .then((response) => dispatch(loadSparqlInformation(response.data)));
         break;
+      case "BOOK_INFORMATION":
+        axios
+          .get("/dbpedia/book/information", {
+            baseURL: "http://localhost:8000",
+            params: {
+              resource:
+                "http://dbpedia.org/resource/Harry_Potter_and_the_Philosopher's_Stone",
+            },
+          })
+          .then((response) => dispatch(loadSparqlInformation(response.data)));
+        break;
       default:
         break;
     }
