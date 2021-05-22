@@ -31,6 +31,45 @@ export const dbpediaMiddleware = ({ dispatch }) => (next) => async (action) => {
             })
                 .then((response) => dispatch(loadSparqlQuery(response.data)))
             break;
+        case 'FETCH_BOOK_SEARCH': {
+            console.log('FETCH BOOK SEARCH');
+            const response = await axios.get(
+                '/dbpedia/book/search',
+                {
+                    baseURL: 'http://localhost:8000',
+                    params: { text: action.payload }
+                }
+            );
+
+            console.log(response.data);
+            break;
+        }
+        case 'FETCH_AUTHOR_SEARCH': {
+            console.log('FETCH AUTHOR SEARCH');
+            const response = await axios.get(
+                '/dbpedia/writer/search',
+                {
+                    baseURL: 'http://localhost:8000',
+                    params: { text: action.payload }
+                }
+            );
+
+            console.log(response.data);
+            break;
+        }
+        case 'FETCH_PUBLISHER_SEARCH': {
+            console.log('FETCH PUBLISHER SEARCH');
+            const response = await axios.get(
+                '/dbpedia/publisher/search',
+                {
+                    baseURL: 'http://localhost:8000',
+                    params: { text: action.payload }
+                }
+            );
+
+            console.log(response.data);
+            break;
+        }
         default:
             break;
     }

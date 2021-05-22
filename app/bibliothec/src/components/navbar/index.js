@@ -1,12 +1,33 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Nav, NavLink } from "./navbarElements";
 import logo from "../../assets/logo.png";
 import "font-awesome/css/font-awesome.min.css";
 
 const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
-  const values = ["test1", "test2", "test3"];
+  const values = ["Books", "Authors", "Publishers"];
   const [searchOption, setSearchOption] = useState(values[0]);
+  const dispatch = useDispatch();
+
+  console.log(searchOption);
+
+  const searchHandler = () => {
+    console.log('Search Handler', searchOption);
+    switch (searchOption) {
+      case 'Books':
+        dispatch({ type: 'FETCH_BOOK_SEARCH', payload: searchValue });
+        break;
+      case 'Authors':
+        dispatch({ type: 'FETCH_AUTHOR_SEARCH', payload: searchValue });
+        break;
+      case 'Publishers':
+        dispatch({ type: 'FETCH_PUBLISHER_SEARCH', payload: searchValue });
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <>
@@ -32,12 +53,14 @@ const Navbar = () => {
               setSearchValue(e.target.value);
             }}
           />
-          <select>
+          <select
+            onChange={ (e) => setSearchOption(e.target.value) }>
             {values.map((item) => {
               return <option value={item}>{item}</option>;
             })}
           </select>
           <i
+            onClick={ searchHandler }
             style={{
               alignSelf: "center",
               padding: "5px",
