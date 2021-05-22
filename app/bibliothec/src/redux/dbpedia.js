@@ -1,14 +1,25 @@
 import axios from 'axios';
 
+const initState = {
+    queryResult: [],
+    searchResult: []
+};
+
 // Actions
 const LOAD_SPARQL_QUERY = 'dbpedia/LOAD_SPARQL_QUERY';
+const LOAD_SEARCH_RESULTS = 'dbpedia/LOAD_SEARCH_RESULTS';
 
-export default function reducer(state = {}, action = {}) {
+export default function reducer(state = initState, action = {}) {
     switch(action.type) {
         case LOAD_SPARQL_QUERY:
             return {
                 ...state,
                 queryResult: action.payload.result,
+            }
+        case LOAD_SEARCH_RESULTS:
+            return {
+                ...state,
+                searchResult: action.payload.result,
             }
         default:
             return state;
@@ -18,6 +29,10 @@ export default function reducer(state = {}, action = {}) {
 // Action creators
 export function loadSparqlQuery(result) {
     return { type: LOAD_SPARQL_QUERY, payload: { result } };
+}
+
+export function loadSearchResults(result) {
+    return { type: LOAD_SEARCH_RESULTS, payload: { result } };
 }
 
 // Middleware
@@ -40,7 +55,7 @@ export const dbpediaMiddleware = ({ dispatch }) => (next) => async (action) => {
                     params: { text: action.payload }
                 }
             );
-
+            dispatch(loadSearchResults(response.data.results.bindings));
             console.log(response.data);
             break;
         }
@@ -53,7 +68,7 @@ export const dbpediaMiddleware = ({ dispatch }) => (next) => async (action) => {
                     params: { text: action.payload }
                 }
             );
-
+            dispatch(loadSearchResults(response.data.results.bindings));
             console.log(response.data);
             break;
         }
@@ -66,7 +81,7 @@ export const dbpediaMiddleware = ({ dispatch }) => (next) => async (action) => {
                     params: { text: action.payload }
                 }
             );
-
+            dispatch(loadSearchResults(response.data.results.bindings));
             console.log(response.data);
             break;
         }

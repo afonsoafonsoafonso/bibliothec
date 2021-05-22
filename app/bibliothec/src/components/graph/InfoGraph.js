@@ -37,18 +37,16 @@ class InfoGraph extends Component {
           
           graph: {
             nodes: [
-              { id: 10, group:'Authors', label: "Node ssssss1", x:0, y:0},
-              { id: 2, group:'Authors', label: "Node sssss222s1", x:100, y:100}
+
 
             ],
             edges: [
-              { from: 1, to: 2 },
-              { from: 1, to: 3 },
-              { from: 2, to: 4 },
-              { from: 2, to: 5 }
+
+
             ]
           },
-          counter: 7,
+          counter: 2,
+          firstRender: true,
           events: {
             selectNode: ({nodes}) => {
               console.log("Selected nodes:");
@@ -57,12 +55,13 @@ class InfoGraph extends Component {
             doubleClick: ({ nodes }) => {
               if(nodes.length !== 0) {
                 this.resetNodes(nodes[0]);
-                this.addNodes();
+                //this.addNodes();
               }
             }
           }
         };
     }
+
 
     addNodes() {
         this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
@@ -126,6 +125,25 @@ class InfoGraph extends Component {
 
         }
       });
+    }
+
+    componentDidUpdate() {
+      if (this.props.firstRender.current !== this.state.firstRender) {
+        console.log("update");
+        this.setState(({ graph: {}, firstRender, ...rest}) => {
+          return {
+            graph: {
+              nodes: [
+                ...this.props.nodesProps
+              ],
+              edges: [
+              ]
+            },
+            firstRender: false,
+            ...rest
+          }
+        });
+      }
     }
 
 
