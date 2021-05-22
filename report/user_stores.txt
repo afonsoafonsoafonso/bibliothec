@@ -1,0 +1,39 @@
+As a visitor 
+I want to login in the application 
+So that I can use its features
+
+As a visitor
+I want to register in the application
+So that I can use its features
+
+As a visitor
+I want to logout from the application
+So that I can end my login session
+
+As a user
+I want to search books using multiple filters
+So that I can find books that I'm looking from
+
+As a user
+I want to save my search filters
+So that I can have an history and use them on a new search
+
+As a user
+I want the information to appear in nodes
+So that I can hierarchically expand the information
+
+As a user
+I want to save the books I click
+So that I can have an history of the books I search
+
+As a user
+I want to have multiple search filters on history data
+So that I can better search on it
+
+As a user
+I want to redo/undo a clicked node
+So that I can navigate better between previously selected nodes
+
+As a x
+I want y
+So that z
