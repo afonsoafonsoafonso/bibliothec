@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-//import ReactDOM from "react-dom";
 import Graph from "react-graph-vis";
 
 class InfoGraph extends Component {
@@ -38,22 +37,33 @@ class InfoGraph extends Component {
           graph: {
             nodes: [
 
-
             ],
             edges: [
 
-
             ]
           },
+          selectedNode: null,
           counter: 2,
           firstRender: true,
           events: {
             selectNode: ({nodes}) => {
+              this.setState(({selectedNode, ...rest}) =>{
+                return{
+                  selectedNode: nodes[0],
+                  ...rest
+                }
+              });
               console.log("Selected nodes:");
-              console.log(nodes);
+              console.log(this.state.selectedNode);
             },
             doubleClick: ({ nodes }) => {
               if(nodes.length !== 0) {
+                this.setState(({selectedNode, ...rest}) =>{
+                  return{
+                    selectedNode: nodes[0],
+                    ...rest
+                  }
+                });
                 this.resetNodes(nodes[0]);
                 //this.addNodes();
               }
@@ -88,6 +98,9 @@ class InfoGraph extends Component {
         let node_copy = nodes_copy.filter(node => {
             return node.id === n
         });
+        node_copy.x = 0;
+        node_copy.y = 0;
+
         console.log(node_copy);
         this.setState(({ graph: {  }, counter, ...rest}) => {
             return {
@@ -127,22 +140,40 @@ class InfoGraph extends Component {
       });
     }
 
-    componentDidUpdate() {
-      if (this.props.firstRender.current !== this.state.firstRender) {
-        console.log("update");
-        this.setState(({ graph: {}, firstRender, ...rest}) => {
-          return {
-            graph: {
-              nodes: [
-                ...this.props.nodesProps
-              ],
-              edges: [
-              ]
-            },
-            firstRender: false,
-            ...rest
-          }
-        });
+    componentDidUpdate(prevProps) {
+      //console.log("ehehehe");
+      if (this.props.nodesProps !== prevProps.nodesProps) {
+       // console.log("ahhaha");
+        if(this.state.selectedNode == null) {
+          this.setState(({ graph: {}, ...rest}) => {
+            return {
+              graph: {
+                nodes: [
+                  ...this.props.nodesProps
+                ],
+                edges: [
+                ]
+              },
+              ...rest
+            }
+          });
+        }
+
+        else {
+          //TODO: Add edges
+          this.setState(({ graph: {}, ...rest}) => {
+            return {
+              graph: {
+                nodes: [
+                  ...this.props.nodesProps
+                ],
+                edges: [
+                ]
+              },
+              ...rest
+            }
+          });
+        }
       }
     }
 
