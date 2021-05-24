@@ -11,14 +11,14 @@ import { useEffect } from "react";
 //import routes from 'utils/routes';
 
 const App = () => {
-  const state = useSelector((state) => state);
+  /* const state = useSelector((state) => state);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
-    dispatch({ type: 'WRITER_SEARCH', text: 'Rowling' })
-  }, []); // dispatch nas dependencias só para calar o warning mesmo
+    dispatch({ type: 'FETCH_SPARQL_QUERY' })
+  }, [dispatch]); // dispatch nas dependencias só para calar o warning mesmo
 
-
+  console.log(state.dbpedia.queryResult); */
   return (
     state.dbpedia.queryResult ?
     <Router>

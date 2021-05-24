@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-//import ReactDOM from "react-dom";
 import Graph from "react-graph-vis";
 import NodeInformation from "../nodeInformation"
 import { connect } from 'react-redux'
@@ -8,140 +7,120 @@ import { switchPopup } from '../../redux/dbpedia'
 class InfoGraph extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedNode: null,
-      options: {
-        layout: {
-          // hierarchical: true,
-        },
-        edges: {
-          color: "#000000",
-        },
-        nodes: {
-          widthConstraint: 50,
-          fixed: {
-            x: true,
-            y: true,
-          },
-        },
-        physics: {
-          enabled: true,
-        },
-        groups: {
-          Authors: {
-            color: {
-              background: "#cc0052",
-              border: "#b30047",
-              highlight: { background: "#b30047", border: "#99003d" },
+        this.state = {
+          options: {
+            layout: {
+              // hierarchical: true,
+            },
+            edges: {
+              color: "#000000"
+            },
+            nodes: {
+                widthConstraint: 50,
+                fixed: {
+                    x: false,
+                    y: false
+                },
+            },
+            physics: {
+                enabled: true,
+                barnesHut: {
+                    springConstant: 0.015,
+                    avoidOverlap: 0.02
+                }
+            },
+            groups: {
+                Authors: {color:{background:'#cc0052', border:'#b30047', highlight: {background:'#b30047', border:'#99003d'}}, borderWidth:1, shape:'dot'},
+                Publishers: {color:{background:'#29a329', border:'#248f24', highlight: {background:'#248f24', border:'#1f7a1f'}}, borderWidth:1, shape:'dot'},
+                Books: {color:{background:'#005ce6', border:'#0052cc', highlight: {background:'#0052cc', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
             },
             borderWidth: 1,
             shape: "dot",
           },
-          Publishers: {
-            color: {
-              background: "#29a329",
-              border: "#248f24",
-              highlight: { background: "#248f24", border: "#1f7a1f" },
-            },
-            borderWidth: 1,
-            shape: "dot",
-          },
-          Books: {
-            color: {
-              background: "#005ce6",
-              border: "#0052cc",
-              highlight: { background: "#0052cc", border: "#0047b3" },
-            },
-            borderWidth: 1,
-            shape: "dot",
-          },
-        },
-        interaction: { multiselect: false, dragView: true },
-      },
+          
+          graph: {
+            nodes: [
 
-      graph: {
-        nodes: [
-          { id: 1, group: "Authors", label: "Node ssssss1", x: -250, y: -70 },
-          { id: 2, group: "Publishers", label: "Node 2", x: 200, y: 50 },
-          { id: 3, group: "Books", label: "Node 3", x: 10, y: -30 },
-          { id: 4, group: "Authors", label: "Node 4", x: -100, y: 30 },
-          {
-            id: 5,
-            group: "Authors",
-            label: this.props.nodes[0].label.value,
-            x: 30,
-            y: 100,
+            ],
+            edges: [
+
+            ]
           },
-        ],
-        edges: [
-          { from: 1, to: 2 },
-          { from: 1, to: 3 },
-          { from: 2, to: 4 },
-          { from: 2, to: 5 },
-        ],
-      },
-      counter: 7,
-      events: {
-        selectNode: ({ nodes }) => {
-          const { dispatch } = this.props;
-          console.log("Selected nodes:");
-          console.log(nodes);
-          dispatch(switchPopup());
-        },
-        doubleClick: ({ nodes }) => {
-          var groupTypes = ["Books", "Authors", "Publishers"];
-          var randomNum = Math.floor(Math.random() * groupTypes.length);
-          if (nodes.length !== 0) {
-            this.addNode(nodes, groupTypes[randomNum]);
+          selectedNode: null,
+          counter: 2,
+          firstRender: true,
+          events: {
+            selectNode: ({nodes}) => {
+              this.setState(({selectedNode, ...rest}) =>{
+                return{
+                  selectedNode: nodes[0],
+                  ...rest
+                }
+              });
+              console.log("Selected nodes:");
+              console.log(this.state.selectedNode);
+              dispatch(switchPopup())
+            },
+            doubleClick: ({ nodes }) => {
+              if(nodes.length !== 0) {
+                this.setState(({selectedNode, ...rest}) =>{
+                  return{
+                    selectedNode: nodes[0],
+                    ...rest
+                  }
+                });
+                this.resetNodes(nodes[0]);
+                //this.addNodes();
+              }
+            }
           }
-        },
-      },
-    };
-  }
+        };
+    }
 
-  addNode(node) {
-    this.setState(({ graph: { nodes, edges }, counter, ...rest }) => {
-      const id = counter + 1;
-      //const from = Math.floor(Math.random() * (counter - 1)) + 1;
-      return {
-        graph: {
-          nodes: [...nodes, { id, group: "Books", label: `Node ${id}` }],
-          edges: [...edges, { from: node[0], to: id }],
-        },
-        counter: id,
-        ...rest,
-      };
-    });
-  }
-  addNode(node, groupType) {
-    this.setState(({ graph: { nodes, edges }, counter, ...rest }) => {
-      const id = counter + 1;
-      let currNode = this.getChosenNode(node[0]);
-      let x = currNode.x;
-      let y = currNode.y;
-      if (groupType === "Books") {
-        x += 200;
-        y -= 30;
-      } else if (groupType === "Authors") {
-        x += 0;
-        y += 200;
-      } else {
-        x -= 200;
-        y -= 30;
-      }
-      return {
-        graph: {
-          nodes: [
-            ...nodes,
-            { id, group: groupType, label: `Node ${id}`, x, y },
-          ],
-          edges: [...edges, { from: node[0], to: id }],
-        },
-        counter: id,
-        ...rest,
-      };
-    });
-  }
+
+    addNodes() {
+        this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
+            const id = counter + 1;
+            return {
+              graph: {
+                nodes: [
+                  ...nodes,
+                  ...this.props.nodesProps
+                ],
+                edges: [
+                  ...edges,
+                  ...this.props.edgesProps
+                ]
+              },
+              counter: id,
+              ...rest
+            }
+          });
+    }
+
+    resetNodes(n) {
+        let nodes_copy = [...this.state.graph.nodes];
+        let node_copy = nodes_copy.filter(node => {
+            return node.id === n
+        });
+        node_copy.x = 0;
+        node_copy.y = 0;
+
+        console.log(node_copy);
+        this.setState(({ graph: {  }, counter, ...rest}) => {
+            return {
+              graph: {
+                nodes: [
+                  ...node_copy
+                ],
+                edges: [
+                ]
+              },
+              counter: 1,
+              ...rest
+            }
+          });
+    }
 
   /*
     Provavelmente em vez de nx e ny, apenas um incremento / decremento
@@ -165,9 +144,43 @@ class InfoGraph extends Component {
     });
   }
 
-  getChosenNode(id) {
-    return this.state.graph.nodes[id - 1];
-  }
+    componentDidUpdate(prevProps) {
+      //console.log("ehehehe");
+      if (this.props.nodesProps !== prevProps.nodesProps) {
+       // console.log("ahhaha");
+        if(this.state.selectedNode == null) {
+          this.setState(({ graph: {}, ...rest}) => {
+            return {
+              graph: {
+                nodes: [
+                  ...this.props.nodesProps
+                ],
+                edges: [
+                ]
+              },
+              ...rest
+            }
+          });
+        }
+
+        else {
+          //TODO: Add edges
+          this.setState(({ graph: {}, ...rest}) => {
+            return {
+              graph: {
+                nodes: [
+                  ...this.props.nodesProps
+                ],
+                edges: [
+                ]
+              },
+              ...rest
+            }
+          });
+        }
+      }
+    }
+
 
   render() {
     return (
@@ -182,11 +195,6 @@ class InfoGraph extends Component {
         )}
       </div>
     );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.popup !== prevProps.popup) {
-    }
   }
 }
 
