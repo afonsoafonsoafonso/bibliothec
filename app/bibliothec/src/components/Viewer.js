@@ -4,6 +4,27 @@ import { useSelector } from "react-redux";
 import Graph from "react-graph-vis";
 import axios from 'axios';
 
+const getRelatedNodes = async (group, node) => {
+  switch (group) {
+    case 'Authors':
+      const books = await axios.get('/dbpedia/writer/books', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      const bookNodesToAdd = books.data.results.bindings.map((obj, index) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Books',
+        resource: obj.obj.value,
+      }));
+
+      return bookNodesToAdd;
+    default:
+      break;
+  }
+}
+
 const Viewer = (props) => {
   const options = {
     layout: {},
@@ -48,19 +69,17 @@ const Viewer = (props) => {
       node.x = 0;
       node.y = 0;
 
-      console.log(node);
-
       setGraph({
         nodes: [node],
         edges: [],
       });
 
-      const books = await axios.get('/dbpedia/writer/books', {
-        baseURL: 'http://localhost:8000',
-        params: { label: node.label }
-      });
+      const nodesToAdd = await getRelatedNodes(node.group, node);
 
-      console.log(books);
+      setGraph({
+        nodes: [node, ...nodesToAdd],
+        edges: [],
+      });
     }
   };
 
