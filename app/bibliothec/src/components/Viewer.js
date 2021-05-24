@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import InfoGraph from "./graph/InfoGraph";
 import { useSelector } from "react-redux";
 

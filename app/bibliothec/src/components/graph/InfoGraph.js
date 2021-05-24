@@ -141,9 +141,7 @@ class InfoGraph extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      //console.log("ehehehe");
       if (this.props.nodesProps !== prevProps.nodesProps) {
-       // console.log("ahhaha");
         if(this.state.selectedNode == null) {
           this.setState(({ graph: {}, ...rest}) => {
             return {
@@ -161,6 +159,10 @@ class InfoGraph extends Component {
 
         else {
           //TODO: Add edges
+          let edgesTemp = this.props.nodesProps.map((item) => 
+          (
+            {from: this.state.selectedNode, to: item.id}
+          ));
           this.setState(({ graph: {}, ...rest}) => {
             return {
               graph: {
@@ -168,6 +170,7 @@ class InfoGraph extends Component {
                   ...this.props.nodesProps
                 ],
                 edges: [
+                  ...edgesTemp
                 ]
               },
               ...rest
