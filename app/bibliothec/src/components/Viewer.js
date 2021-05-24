@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import InfoGraph from "./graph/InfoGraph";
 import { useSelector } from "react-redux";
 import Graph from "react-graph-vis";
+import axios from 'axios';
 
 const Viewer = (props) => {
   const options = {
@@ -41,15 +42,25 @@ const Viewer = (props) => {
   });
 
   const events = {
-    doubleClick: ({ nodes }) => {
+    doubleClick: async ({ nodes }) => {
       graphKey.current = graphKey.current + 1;
       const node = graph.nodes.filter(node =>  node.id === nodes[0])[0];
       node.x = 0;
       node.y = 0;
+
+      console.log(node);
+
       setGraph({
         nodes: [node],
         edges: [],
       });
+
+      const books = await axios.get('/dbpedia/writer/books', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      console.log(books);
     }
   };
 
