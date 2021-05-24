@@ -1,0 +1,6 @@
+.searchArea {
+  min-height: 30%;
+  display: flex;
+  background-color: #ebebeb !important;
+  border-radius: 15px !important;
+}

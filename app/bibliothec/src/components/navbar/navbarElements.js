@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Nav = styled.nav`
   background: #FFF;
-  height: 100px;
+  height: 120px;
   display: flex;
   z-index: 10;
   justify-content: flex-start;
@@ -22,3 +22,4 @@ export const NavLink = styled(Link)`
     color: #15cdfc;
   }
 `;
+

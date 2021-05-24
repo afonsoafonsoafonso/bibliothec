@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Nav, NavLink } from "./navbarElements";
 import logo from "../../assets/logo.png";
 import "font-awesome/css/font-awesome.min.css";
-import { searchField } from "../../redux/dbpedia"
+import { searchField } from "../../redux/dbpedia";
+import "./navbar.css"
 
 const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -41,13 +42,14 @@ const Navbar = () => {
             alt="logo"
           />
         </NavLink>
-        <div
-          style={{
-            minHeight: "30%",
-            display: "flex",
-          }}
-        >
+        <div class="searchArea">
           <input
+            style={{
+              width: "30vw",
+              border: "none",
+              backgroundColor: "#ebebeb",
+              borderRadius: "15px",
+            }}
             type="text"
             value={searchValue}
             placeholder="Type something"
@@ -55,9 +57,16 @@ const Navbar = () => {
               setSearchValue(e.target.value);
             }}
           />
-          <select onChange={(e) => dispatch(searchField(e.target.value))}>
+          <select
+            style={{ border: "none" }}
+            onChange={(e) => dispatch(searchField(e.target.value))}
+          >
             {values.map((item) => {
-              return <option value={item}>{item}</option>;
+              return (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              );
             })}
           </select>
           <i
@@ -65,9 +74,10 @@ const Navbar = () => {
             style={{
               alignSelf: "center",
               padding: "5px",
+              color: "#E74845",
             }}
-            class="fa fa-search"
-          ></i>
+            className="fa fa-search"
+          />
         </div>
       </Nav>
     </>
