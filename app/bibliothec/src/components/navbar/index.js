@@ -42,7 +42,7 @@ const Navbar = () => {
             alt="logo"
           />
         </NavLink>
-        <div class="searchArea">
+        <div className="searchArea">
           <input
             style={{
               width: "30vw",
