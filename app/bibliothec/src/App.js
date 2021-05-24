@@ -20,13 +20,12 @@ const App = () => {
 
   console.log(state.dbpedia.queryResult); */
   return (
-    state.dbpedia.queryResult ?
     <Router>
       <Navbar />
       <Switch>
         <Route path={routes.overview} exact component={Overview} />
       </Switch>
-    </Router> : null
+    </Router>
   );
 };
 

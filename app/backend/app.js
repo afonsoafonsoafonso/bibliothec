@@ -21,7 +21,7 @@ app.get("/dbpedia", async (req, res) => {
 // WRITER ENDPOINTS
 
 app.get("/dbpedia/writer/information", async (req, res) => {
-    console.log("Request to /dbpedia/information endpoint");
+  console.log("Request to /dbpedia/information endpoint");
 
   const query = `SELECT DISTINCT 
 ?birthName ?birthPlace ?birthDate ?abstract  
@@ -33,9 +33,9 @@ dbo:birthName ?birthName ;
 dbp:birthPlace ?birthPlace . 
 FILTER (lang(?abstract) = 'en')}`;
   // If I remove dbp it works on live.dbpedia, dunno why
-  
+
   console.log(encodeURIComponent(query));
-  console.log(req.query.resource)
+  console.log(req.query.resource);
 
   axios
     .get(

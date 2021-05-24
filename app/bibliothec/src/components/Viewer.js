@@ -14,7 +14,7 @@ function Viewer(props) {
 
             setState({
                 ...state, loading: false, graph_info: {"nodes": storeState.dbpedia.searchResult.map((item, index) =>
-                ({ id: index, label: item.label.value, group: "Books"}))}
+                ({ id: index, label: item.label.value, group: storeState.dbpedia.searchOption, resource: item.obj.value}))}
         
             });
     }, [storeState.dbpedia.searchResult]);

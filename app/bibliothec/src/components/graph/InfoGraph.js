@@ -1,126 +1,155 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import Graph from "react-graph-vis";
-import NodeInformation from "../nodeInformation"
-import { connect } from 'react-redux'
-import { switchPopup } from '../../redux/dbpedia'
+import NodeInformation from "../nodeInformation";
+import { connect } from "react-redux";
+import { switchPopup, selectedNodeValue} from "../../redux/dbpedia";
 
 class InfoGraph extends Component {
   constructor(props) {
     super(props);
-        this.state = {
-          options: {
-            layout: {
-              // hierarchical: true,
-            },
-            edges: {
-              color: "#000000"
-            },
-            nodes: {
-                widthConstraint: 50,
-                fixed: {
-                    x: false,
-                    y: false
-                },
-            },
-            physics: {
-                enabled: true,
-                barnesHut: {
-                    springConstant: 0.015,
-                    avoidOverlap: 0.02
-                }
-            },
-            groups: {
-                Authors: {color:{background:'#cc0052', border:'#b30047', highlight: {background:'#b30047', border:'#99003d'}}, borderWidth:1, shape:'dot'},
-                Publishers: {color:{background:'#29a329', border:'#248f24', highlight: {background:'#248f24', border:'#1f7a1f'}}, borderWidth:1, shape:'dot'},
-                Books: {color:{background:'#005ce6', border:'#0052cc', highlight: {background:'#0052cc', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
+    this.state = {
+      options: {
+        layout: {
+          // hierarchical: true,
+        },
+        edges: {
+          color: "#000000",
+        },
+        nodes: {
+          widthConstraint: 50,
+          fixed: {
+            x: false,
+            y: false,
+          },
+        },
+        physics: {
+          enabled: true,
+          barnesHut: {
+            springConstant: 0.015,
+            avoidOverlap: 0.02,
+          },
+        },
+        groups: {
+          Authors: {
+            color: {
+              background: "#cc0052",
+              border: "#b30047",
+              highlight: { background: "#b30047", border: "#99003d" },
             },
             borderWidth: 1,
             shape: "dot",
           },
-          
-          graph: {
-            nodes: [
-
-            ],
-            edges: [
-
-            ]
-          },
-          selectedNode: null,
-          counter: 2,
-          firstRender: true,
-          events: {
-            selectNode: ({nodes}) => {
-              this.setState(({selectedNode, ...rest}) =>{
-                return{
-                  selectedNode: nodes[0],
-                  ...rest
-                }
-              });
-              console.log("Selected nodes:");
-              console.log(this.state.selectedNode);
-              dispatch(switchPopup())
+          Publishers: {
+            color: {
+              background: "#29a329",
+              border: "#248f24",
+              highlight: { background: "#248f24", border: "#1f7a1f" },
             },
-            doubleClick: ({ nodes }) => {
-              if(nodes.length !== 0) {
-                this.setState(({selectedNode, ...rest}) =>{
-                  return{
-                    selectedNode: nodes[0],
-                    ...rest
-                  }
-                });
-                this.resetNodes(nodes[0]);
-                //this.addNodes();
-              }
-            }
+            borderWidth: 1,
+            shape: "dot",
+          },
+          Books: {
+            color: {
+              background: "#005ce6",
+              border: "#0052cc",
+              highlight: { background: "#0052cc", border: "#0047b3" },
+            },
+            borderWidth: 1,
+            shape: "dot",
+          },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+
+      graph: {
+        nodes: [],
+        edges: [],
+      },
+      selectedNode: null,
+      counter: 2,
+      firstRender: true,
+      events: {
+        selectNode: ({ nodes }) => {
+          this.setState(({ selectedNode, ...rest }) => {
+            return {
+              selectedNode: nodes[0],
+              ...rest,
+            };
+          });
+          console.log("Selected nodes:");
+          console.log(this.state.selectedNode);
+          this.handleSelectedNode(
+            this.state.graph.nodes[this.state.selectedNode]
+          );
+        },
+        doubleClick: ({ nodes }) => {
+          if (nodes.length !== 0) {
+            this.setState(({ selectedNode, ...rest }) => {
+              return {
+                selectedNode: nodes[0],
+                ...rest,
+              };
+            });
+            this.resetNodes(nodes[0]);
+            //this.addNodes();
           }
-        };
+        },
+      },
+    };
+  }
+
+  handleSelectedNode(node) {
+    const resource = node.resource
+    const { dispatch } = this.props;
+    dispatch(selectedNodeValue(node.label))
+    switch (this.props.searchOption) {
+      case "Books":
+        dispatch({ type: "BOOK_INFORMATION", payload: resource });
+        break;
+      case "Authors":
+        dispatch({ type: "WRITER_INFORMATION", payload: resource });
+        break;
+      default:
+        break;
     }
+    dispatch(switchPopup());
+  }
 
+  addNodes() {
+    this.setState(({ graph: { nodes, edges }, counter, ...rest }) => {
+      const id = counter + 1;
+      return {
+        graph: {
+          nodes: [...nodes, ...this.props.nodesProps],
+          edges: [...edges, ...this.props.edgesProps],
+        },
+        counter: id,
+        ...rest,
+      };
+    });
+  }
 
-    addNodes() {
-        this.setState(({ graph: { nodes, edges }, counter, ...rest}) => {
-            const id = counter + 1;
-            return {
-              graph: {
-                nodes: [
-                  ...nodes,
-                  ...this.props.nodesProps
-                ],
-                edges: [
-                  ...edges,
-                  ...this.props.edgesProps
-                ]
-              },
-              counter: id,
-              ...rest
-            }
-          });
-    }
+  resetNodes(n) {
+    let nodes_copy = [...this.state.graph.nodes];
+    let node_copy = nodes_copy.filter((node) => {
+      return node.id === n;
+    });
+    node_copy.x = 0;
+    node_copy.y = 0;
 
-    resetNodes(n) {
-        let nodes_copy = [...this.state.graph.nodes];
-        let node_copy = nodes_copy.filter(node => {
-            return node.id === n
-        });
-        node_copy.x = 0;
-        node_copy.y = 0;
-
-        console.log(node_copy);
-        this.setState(({ graph: {  }, counter, ...rest}) => {
-            return {
-              graph: {
-                nodes: [
-                  ...node_copy
-                ],
-                edges: [
-                ]
-              },
-              counter: 1,
-              ...rest
-            }
-          });
-    }
+    console.log(node_copy);
+    this.setState(({ graph: {}, counter, ...rest }) => {
+      return {
+        graph: {
+          nodes: [...node_copy],
+          edges: [],
+        },
+        counter: 1,
+        ...rest,
+      };
+    });
+  }
 
   /*
     Provavelmente em vez de nx e ny, apenas um incremento / decremento
@@ -144,43 +173,34 @@ class InfoGraph extends Component {
     });
   }
 
-    componentDidUpdate(prevProps) {
-      //console.log("ehehehe");
-      if (this.props.nodesProps !== prevProps.nodesProps) {
-       // console.log("ahhaha");
-        if(this.state.selectedNode == null) {
-          this.setState(({ graph: {}, ...rest}) => {
-            return {
-              graph: {
-                nodes: [
-                  ...this.props.nodesProps
-                ],
-                edges: [
-                ]
-              },
-              ...rest
-            }
-          });
-        }
-
-        else {
-          //TODO: Add edges
-          this.setState(({ graph: {}, ...rest}) => {
-            return {
-              graph: {
-                nodes: [
-                  ...this.props.nodesProps
-                ],
-                edges: [
-                ]
-              },
-              ...rest
-            }
-          });
-        }
+  componentDidUpdate(prevProps) {
+    //console.log("ehehehe");
+    if (this.props.nodesProps !== prevProps.nodesProps) {
+      // console.log("ahhaha");
+      if (this.state.selectedNode == null) {
+        this.setState(({ graph: {}, ...rest }) => {
+          return {
+            graph: {
+              nodes: [...this.props.nodesProps],
+              edges: [],
+            },
+            ...rest,
+          };
+        });
+      } else {
+        //TODO: Add edges
+        this.setState(({ graph: {}, ...rest }) => {
+          return {
+            graph: {
+              nodes: [...this.props.nodesProps],
+              edges: [],
+            },
+            ...rest,
+          };
+        });
       }
     }
-
+  }
 
   render() {
     return (
@@ -199,11 +219,10 @@ class InfoGraph extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  nodes: state.dbpedia.queryResult.results.bindings,
-  popup: state.dbpedia.popup
+  searchOption: state.dbpedia.searchOption,
+  popup: state.dbpedia.popup,
 });
 
 export default connect(mapStateToProps)(InfoGraph);
-
 
 // export default InfoGraph;
