@@ -1,28 +1,35 @@
 import axios from 'axios';
 
 const initState = {
-    queryResult: [],
-    searchResult: []
+  queryResult: [],
+  searchResult: [],
+  searchOption: 'Books',
 };
 
 // Actions
 const LOAD_SPARQL_QUERY = 'dbpedia/LOAD_SPARQL_QUERY';
 const LOAD_SEARCH_RESULTS = 'dbpedia/LOAD_SEARCH_RESULTS';
+const SEARCH_FIELD = "dbpedia/SEARCH_FIELD";
 
 export default function reducer(state = initState, action = {}) {
-    switch(action.type) {
-        case LOAD_SPARQL_QUERY:
-            return {
-                ...state,
-                queryResult: action.payload.result,
-            }
-        case LOAD_SEARCH_RESULTS:
-            return {
-                ...state,
-                searchResult: action.payload.result,
-            }
-        default:
-            return state;
+    switch (action.type) {
+      case LOAD_SPARQL_QUERY:
+        return {
+          ...state,
+          queryResult: action.payload.result,
+        };
+      case LOAD_SEARCH_RESULTS:
+        return {
+          ...state,
+          searchResult: action.payload.result,
+        };
+      case SEARCH_FIELD:
+        return {
+          ...state,
+          searchOption: action.payload.result,
+        };
+      default:
+        return state;
     }
 }
 
@@ -34,7 +41,9 @@ export function loadSparqlQuery(result) {
 export function loadSearchResults(result) {
     return { type: LOAD_SEARCH_RESULTS, payload: { result } };
 }
-
+export function searchField(result) {
+  return { type: SEARCH_FIELD, payload: { result } };
+}
 // Middleware
 export const dbpediaMiddleware = ({ dispatch }) => (next) => async (action) => {
     next(action);
