@@ -12,7 +12,7 @@ const getRelatedNodes = async (group, node) => {
         params: { label: node.label }
       });
 
-      const bookNodesToAdd = books.data.results.bindings.map((obj, index) => ({
+      const bookNodesToAdd = books.data.results.bindings.map((obj) => ({
         id: obj.obj.value,
         label: obj.label.value,
         group: 'Books',
@@ -20,6 +20,20 @@ const getRelatedNodes = async (group, node) => {
       }));
 
       return bookNodesToAdd;
+    case 'Books':
+      const authors = await axios.get('/dbpedia/book/authors', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      const authorNodesToAdd = authors.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Authors',
+        resource: obj.obj.value,
+      }));
+
+      return authorNodesToAdd;
     default:
       break;
   }
