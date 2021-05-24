@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import InfoGraph from "./graph/InfoGraph";
 import { useSelector } from "react-redux";
 import Graph from "react-graph-vis";
@@ -31,6 +31,8 @@ const Viewer = (props) => {
     interaction: { multiselect: false, dragView: true },
   };
 
+  const graphKey = useRef(0);
+
   const storeState = useSelector((state) => state);
 
   const [graph, setGraph] = useState({
@@ -38,7 +40,18 @@ const Viewer = (props) => {
     edges: [],
   });
 
-  const events = {};
+  const events = {
+    doubleClick: ({ nodes }) => {
+      graphKey.current = graphKey.current + 1;
+      const node = graph.nodes.filter(node =>  node.id === nodes[0])[0];
+      node.x = 0;
+      node.y = 0;
+      setGraph({
+        nodes: [node],
+        edges: [],
+      });
+    }
+  };
 
   useEffect(() => {
     setGraph({
@@ -52,7 +65,7 @@ const Viewer = (props) => {
   }, [storeState.dbpedia.searchResult]);
 
   return (
-    <div id="graph" style={{ height: '100vh' }}>
+    <div key={graphKey.current} style={{ height: '100vh' }}>
       <Graph
         graph={ graph }
         options={ options }
