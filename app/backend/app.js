@@ -6,7 +6,6 @@ const cors = require("cors");
 
 app.use(cors());
 
-<<<<<<< HEAD
 const logger = function (req, res, next) {
   console.log('Logger: ', req.originalUrl);
   next();
@@ -15,10 +14,6 @@ const logger = function (req, res, next) {
 app.use(logger);
 
 app.get('/dbpedia', async (req, res) => {
-=======
-app.get("/dbpedia", async (req, res) => {
-  console.log("Request to /dbpedia endpoint");
->>>>>>> f99aec7972625528c45b1906b88487d8f27a6a8b
   // example query do DBPedia SPARQL Endpoint
   axios
     .get(
@@ -31,9 +26,6 @@ app.get("/dbpedia", async (req, res) => {
 
 // WRITER ENDPOINTS
 
-<<<<<<< HEAD
-app.get('/dbpedia/writer/search', async (req, res) => {
-=======
 app.get("/dbpedia/writer/information", async (req, res) => {
   console.log("Request to /dbpedia/information endpoint");
 
@@ -64,7 +56,6 @@ Optional { <${req.query.resource}> dbo:birthDate ?birthDate . }
 app.get("/dbpedia/writer/search", async (req, res) => {
   console.log("Request to /dbpedia/search endpoint");
 
->>>>>>> f99aec7972625528c45b1906b88487d8f27a6a8b
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
       ?obj rdf:type dbo:Writer .
@@ -123,13 +114,7 @@ app.get("/dbpedia/writer/subjects", async (req, res) => {
 
 // BOOK ENDPOINTS
 
-<<<<<<< HEAD
 app.get('/dbpedia/book/search', async (req, res) => {
-=======
-app.get("/dbpedia/book/search", async (req, res) => {
-  console.log("Request to /dbpedia/search endpoint");
-
->>>>>>> f99aec7972625528c45b1906b88487d8f27a6a8b
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
       ?obj rdf:type dbo:Book .
@@ -230,13 +215,7 @@ app.get('/dbpedia/book/publisher', async (req, res) => {
 })
 
 // SUBJECT ENDPOINTS
-<<<<<<< HEAD
 app.get('/dbpedia/subject/search', async (req, res) => {
-=======
-app.get("/dbpedia/subject/search", async (req, res) => {
-  console.log("Request to /dbpedia/search endpoint");
-
->>>>>>> f99aec7972625528c45b1906b88487d8f27a6a8b
   const query = `SELECT DISTINCT ?obj, ?label
     WHERE {
       ?obj rdf:type skos:Concept .
