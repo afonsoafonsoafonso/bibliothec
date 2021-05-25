@@ -164,8 +164,11 @@ Optional { <${req.query.resource}> dbp:releaseDate ?publicationDate . }
 Optional { <${req.query.resource}> dbo:releaseDate ?publicationDate . }
 Optional { <${req.query.resource}> dbo:literaryGenre ?literaryGenre .
 Optional { ?literaryGenre rdfs:label ?literatureGenre.  } }
+Optional { <${req.query.resource}> dbo:genre ?literaryGenre .
+Optional { ?literaryGenre rdfs:label ?literatureGenre.  } }
   FILTER(!bound(?literatureGenre) || lang(?literatureGenre) = 'en')
 Optional { <${req.query.resource}> dbo:isbn ?isbn . }
+Optional { <${req.query.resource}> dbp:isbnNote ?isbn . }
 }`;
 
   axios
