@@ -19,7 +19,19 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      return bookNodesToAdd;
+      const subjects = await axios.get('dbpedia/writer/subjects', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      const subjectNodesToAdd = subjects.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Subjects',
+        resource: obj.obj.value,
+      }));
+
+      return [...bookNodesToAdd, ...subjectNodesToAdd];
     }
     case 'Books': {
       console.log('IAJDIAWD');
@@ -37,6 +49,9 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
+      console.log('Now going to fetch publishers');
+
+      //TODO: não funciona. ver porquê
       const publishers = await axios.get('/dbpedia/book/publisher', {
         baseURL: 'http://localhost:8000',
         params: { label: node.label }
@@ -49,9 +64,24 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      console.log(publishers);
+      console.log('Now going to fetch subjects');
 
-      return [...authorNodesToAdd, ...publisherNodesToAdd];
+      const subjects = await axios.get('dbpedia/book/subjects', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      const subjectNodesToAdd = subjects.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Subjects',
+        resource: obj.obj.value,
+      }));
+
+      console.log('BOOK SUBJECTS');
+      console.log(subjects.data);
+
+      return [...authorNodesToAdd, ...publisherNodesToAdd, ...subjectNodesToAdd];
     }
     case 'Publishers': {
       const books = await axios.get('dbpedia/publisher/books', {
@@ -97,6 +127,7 @@ const Viewer = (props) => {
       Authors: {color:{background:'#cc0052', border:'#b30047', highlight: {background:'#b30047', border:'#99003d'}}, borderWidth:1, shape:'dot'},
       Publishers: {color:{background:'#29a329', border:'#248f24', highlight: {background:'#248f24', border:'#1f7a1f'}}, borderWidth:1, shape:'dot'},
       Books: {color:{background:'#005ce6', border:'#0052cc', highlight: {background:'#0052cc', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
+      Subjects: {color:{background:'#EBEBEB', border:'#EBEBEB', highlight: {background:'#EBEBEB', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
     },
     interaction: { multiselect: false, dragView: true },
   };
