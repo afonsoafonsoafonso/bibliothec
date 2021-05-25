@@ -43,7 +43,6 @@ Optional { <${req.query.resource}> dbo:birthDate ?birthDate . }
       )}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`
     )
     .then((response) => {
-      console.log(response.data);
       res.send(response.data);
     });
 });
@@ -169,7 +168,6 @@ Optional { ?literaryGenre rdfs:label ?literatureGenre.  } }
 Optional { <${req.query.resource}> dbo:isbn ?isbn . }
 }`;
 
-  console.log(query)
   axios
     .get(
       `https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(
@@ -177,7 +175,6 @@ Optional { <${req.query.resource}> dbo:isbn ?isbn . }
       )}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`
     )
     .then((response) => {
-      console.log(response.data);
       res.send(response.data);
     });
 });
