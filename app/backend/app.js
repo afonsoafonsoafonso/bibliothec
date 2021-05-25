@@ -73,19 +73,18 @@ app.get("/dbpedia/writer/books", async (req, res) => {
    WHERE {
      ?obj rdf:type dbo:Book .
      ?obj rdfs:label ?label .
-     ?obj dbo:author dbr:${req.query.label}
+     ?obj dbo:author dbr:${req.query.label.split(' ').join('_')}
    }`;
 
-  axios
-    .get(
-      `http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(
-        query
-      )}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`
-    )
-    .then((response) => {
-      res.send(response.data);
-    });
-});
+   console.log(encodeURIComponent(query));
+
+   console.log(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`);
+
+   axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+   .then((response) => {
+     res.send(response.data);
+   });
+})
 
 // hmmm dont know if we should keep it as it isnt very easilt filtered. better to keep just the book subjects in the app?
 app.get("/dbpedia/writer/subjects", async (req, res) => {
@@ -93,8 +92,8 @@ app.get("/dbpedia/writer/subjects", async (req, res) => {
     WHERE {
       ?obj rdf:type skos:Concept .
       ?obj rdfs:label ?label .
-      dbr:${req.query.label} dct:subject ?obj .
-    }`;
+      dbr:${req.query.label.split(' ').join('_')} dct:subject ?obj .
+    }`
 
   axios
     .get(
@@ -135,8 +134,8 @@ app.get("/dbpedia/book/subjects", async (req, res) => {
     WHERE {
       ?obj rdf:type skos:Concept .
       ?obj rdfs:label ?label .
-      dbr:${req.query.label} dct:subject ?obj .
-    }`;
+     dbr:${req.query.label.split(' ').join('_')} dct:subject ?obj .
+    }`
 
   axios
     .get(
@@ -148,6 +147,7 @@ app.get("/dbpedia/book/subjects", async (req, res) => {
       res.send(response.data);
     });
 });
+
 app.get("/dbpedia/book/information", async (req, res) => {
   console.log("Request to /dbpedia/information endpoint");
 
@@ -179,6 +179,34 @@ Optional { <${req.query.resource}> dbo:isbn ?isbn . }
     });
 });
 
+app.get('/dbpedia/book/authors', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+  WHERE {
+    ?obj rdf:type dbo:Writer .
+    ?obj rdfs:label ?label .
+    dbr:${req.query.label.split(' ').join('_')} dbo:author ?obj .
+  }`
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+  .then((response) => {
+    res.send(response.data);
+  });
+})
+
+app.get('/dbpedia/book/publisher', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+  WHERE {
+    ?obj rdf:type dbo:Publisher .
+    ?obj rdfs:label ?label .
+    dbr:${req.query.label.split(' ').join('_')} dbo:publisher ?obj .
+  }`
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+  .then((response) => {
+    res.send(response.data);
+  });
+})
+
 // SUBJECT ENDPOINTS
 app.get("/dbpedia/subject/search", async (req, res) => {
   console.log("Request to /dbpedia/search endpoint");
@@ -207,7 +235,7 @@ app.get("/dbpedia/subject/books", async (req, res) => {
     WHERE {
       ?obj rdf:type dbo:Book .
       ?obj rdfs:label ?label .
-      ?obj dct:subject dbc:${req.query.label}
+      ?obj dct:subject dbc:${req.query.label.split(' ').join('_')}
     }`;
 
   axios
@@ -226,7 +254,7 @@ app.get("/dbpedia/subject/writers", async (req, res) => {
     WHERE {
       ?obj rdf:type dbo:Writer .
       ?obj rdfs:label ?label .
-      ?obj dct:subject dbc:${req.query.label}
+      ?obj dct:subject dbc:${req.query.label.split(' ').join('_')}
     }`;
 
   axios
@@ -266,7 +294,7 @@ app.get("/dbpedia/publisher/books", async (req, res) => {
     WHERE {
       ?obj rdf:type dbo:Book .
       ?obj rdfs:label ?label .
-      ?obj dbo:publisher dbr:${req.query.label}
+      ?obj dbo:publisher dbr:${req.query.label.split(' ').join('_')}
     }`;
 
   axios

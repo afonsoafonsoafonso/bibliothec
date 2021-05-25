@@ -1,10 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Graph from "react-graph-vis";
-import NodeInformation from "../nodeInformation";
-import { connect } from "react-redux";
-import { switchPopup, selectedNodeValue} from "../../redux/dbpedia";
 
-class InfoGraph extends Component {
+class InfoGraphh extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,8 +55,7 @@ class InfoGraph extends Component {
             shape: "dot",
           },
         },
-        borderWidth: 1,
-        shape: "dot",
+        interaction: { multiselect: false, dragView: true },
       },
 
       graph: {
@@ -77,11 +73,11 @@ class InfoGraph extends Component {
               ...rest,
             };
           });
-          console.log("Selected nodes:");
-          console.log(this.state.selectedNode);
           this.handleSelectedNode(
             this.state.graph.nodes[this.state.selectedNode]
           );
+          console.log("Selected nodes:");
+          console.log(this.state.selectedNode);
         },
         doubleClick: ({ nodes }) => {
           if (nodes.length !== 0) {
@@ -100,9 +96,9 @@ class InfoGraph extends Component {
   }
 
   handleSelectedNode(node) {
-    const resource = node.resource
+    const resource = node.resource;
     const { dispatch } = this.props;
-    dispatch(selectedNodeValue(node.label))
+    dispatch(selectedNodeValue(node.label));
     switch (this.props.searchOption) {
       case "Books":
         dispatch({ type: "BOOK_INFORMATION", payload: resource });
@@ -174,9 +170,7 @@ class InfoGraph extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    //console.log("ehehehe");
     if (this.props.nodesProps !== prevProps.nodesProps) {
-      // console.log("ahhaha");
       if (this.state.selectedNode == null) {
         this.setState(({ graph: {}, ...rest }) => {
           return {
@@ -189,17 +183,25 @@ class InfoGraph extends Component {
         });
       } else {
         //TODO: Add edges
+        let edgesTemp = this.props.nodesProps.map((item) => ({
+          from: this.state.selectedNode,
+          to: item.id,
+        }));
         this.setState(({ graph: {}, ...rest }) => {
           return {
             graph: {
               nodes: [...this.props.nodesProps],
-              edges: [],
+              edges: [...edgesTemp],
             },
             ...rest,
           };
         });
       }
     }
+  }
+
+  getChosenNode(id) {
+    return this.state.graph.nodes[id - 1];
   }
 
   render() {
@@ -209,10 +211,7 @@ class InfoGraph extends Component {
           graph={this.state.graph}
           options={this.state.options}
           events={this.state.events}
-        ></Graph>
-        {this.props.popup && (
-          <NodeInformation type={"author"} value=""></NodeInformation>
-        )}
+        />
       </div>
     );
   }
@@ -223,6 +222,67 @@ const mapStateToProps = (state) => ({
   popup: state.dbpedia.popup,
 });
 
-export default connect(mapStateToProps)(InfoGraph);
+//export default connect(mapStateToProps)(InfoGraph);
 
-// export default InfoGraph;
+const InfoGraph = ({ graph }) => {
+  const options = {
+    layout: {},
+    edges: {
+      color: "#000000",
+    },
+    nodes: {
+      widthConstraint: 50,
+      fixed: {
+        x: false,
+        y: false,
+      },
+    },
+    physics: {
+      enabled: true,
+      barnesHut: {
+        springConstant: 0.015,
+        avoidOverlap: 0.02,
+      },
+    },
+    groups: {
+      Authors: {
+        color: {
+          background: "#cc0052",
+          border: "#b30047",
+          highlight: { background: "#b30047", border: "#99003d" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+      Publishers: {
+        color: {
+          background: "#29a329",
+          border: "#248f24",
+          highlight: { background: "#248f24", border: "#1f7a1f" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+      Books: {
+        color: {
+          background: "#005ce6",
+          border: "#0052cc",
+          highlight: { background: "#0052cc", border: "#0047b3" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+    },
+    interaction: { multiselect: false, dragView: true },
+  };
+
+  const events = {};
+
+  return (
+    <div id="graph" style={{ height: "100vh" }}>
+      <Graph graph={graph} options={options} events={events} />
+    </div>
+  );
+};
+
+export default InfoGraph;
