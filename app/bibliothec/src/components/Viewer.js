@@ -102,6 +102,41 @@ const getRelatedNodes = async (group, node) => {
 
       return bookNodesToAdd;
     }
+    case "Subjects": {
+      console.log('DOUBLE CLICK SUBJECT');
+
+      const authors = await axios.get("/dbpedia/subject/writers", {
+        baseURL: "http://localhost:8000",
+        params: { label: node.label },
+      });
+
+      const authorNodesToAdd = authors.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: "Authors",
+        resource: obj.obj.value,
+      }));
+
+      console.log('authors');
+      console.log(authors.data);
+
+      const books = await axios.get('/dbpedia/subject/books', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label },
+      });
+
+      const bookNodesToAdd = books.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Books',
+        resource: obj.obj.value,
+      }));
+
+      console.log('books');
+      console.log(books.data);
+
+      return [...authorNodesToAdd, ...bookNodesToAdd];
+    }
     default:
       break;
   }
@@ -170,9 +205,9 @@ const Viewer = (props) => {
 
   const events = {
     selectNode: ({ nodes}) => {
-      handleSelectedNode(graph.nodes[nodes]);
-      console.log("Selected nodes:");
-      console.log(graph.nodes[nodes]);
+      //handleSelectedNode(graph.nodes[nodes]);
+      //console.log("Selected nodes:");
+      //console.log(graph.nodes[nodes]);
     },
 
     doubleClick: async ({ nodes }) => {

@@ -122,6 +122,15 @@ export const dbpediaMiddleware =
         console.log(response.data);
         break;
       }
+      case "FETCH_SUBJECT_SEARCH": {
+        const response = await axios.get("/dbpedia/subject/search", {
+          baseURL: "http://localhost:8000",
+          params: { text: action.payload },
+        });
+        dispatch(loadSearchResults(response.data.results.bindings));
+        console.log(response.data);
+        break;
+      }
       case "WRITER_INFORMATION":
         axios
           .get("/dbpedia/writer/information", {

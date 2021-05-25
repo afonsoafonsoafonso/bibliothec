@@ -10,7 +10,7 @@ const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
   const state = useSelector((state) => state.dbpedia);
-  const values = ["Books", "Authors", "Publishers"];
+  const values = ["Books", "Authors", "Publishers", "Subjects"];
   const searchOption = state.searchOption;
 
   console.log(searchOption);
@@ -26,6 +26,9 @@ const Navbar = () => {
         break;
       case "Publishers":
         dispatch({ type: "FETCH_PUBLISHER_SEARCH", payload: searchValue });
+        break;
+      case "Subjects":
+        dispatch({ type: "FETCH_SUBJECT_SEARCH", payload: searchValue });
         break;
       default:
         break;
