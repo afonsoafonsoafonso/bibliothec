@@ -21,7 +21,7 @@ const Popup = ({ name, infos }) => {
             infoKeys.map(
               (key) =>
                 infos[0][key].value && (
-                  <p>
+                  <p key={key}>
                     <b>{_.startCase(key)}:</b> {infos[0][key].value}
                   </p>
                 )
