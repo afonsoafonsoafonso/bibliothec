@@ -43,6 +43,11 @@ export default function reducer(state = initState, action = {}) {
         ...state,
         searchOption: action.payload.result,
       }
+      case SELECTED_NODE_VALUE:
+          return {
+              ...state,
+              selectedNodeValue: action.payload.result
+          }
     default:
       return state;
   }

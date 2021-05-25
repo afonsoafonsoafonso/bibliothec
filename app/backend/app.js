@@ -26,16 +26,15 @@ app.get("/dbpedia/writer/information", async (req, res) => {
   const query = `SELECT DISTINCT 
 ?birthName ?birthPlace ?birthDate ?abstract  
 WHERE { 
-<${req.query.resource}> 
-dbo:abstract ?abstract ; 
-dbo:birthDate ?birthDate ;
-dbo:birthName ?birthName ;
-dbp:birthPlace ?birthPlace . 
-FILTER (lang(?abstract) = 'en')}`;
+<${req.query.resource}>
+dbo:abstract ?abstract .
+FILTER (lang(?abstract) = 'en')
+Optional { <${req.query.resource}> dbo:birthName ?birthName . }
+Optional { <${req.query.resource}> dbp:birthPlace ?birthPlace . }
+Optional { <${req.query.resource}> dbo:birthDate ?birthDate . }
+}`;
+  
   // If I remove dbp it works on live.dbpedia, dunno why
-
-  console.log(encodeURIComponent(query));
-  console.log(req.query.resource);
 
   axios
     .get(
@@ -154,19 +153,23 @@ app.get("/dbpedia/book/information", async (req, res) => {
   console.log("Request to /dbpedia/information endpoint");
 
   const query = `SELECT DISTINCT 
-?publicationDate ?literatureGenre ?isbn ?abstract
+?publicationDate (group_concat(?literatureGenre;separator=', ') as ?literatureGenres)  ?isbn ?abstract
 WHERE { 
 <${req.query.resource}> 
-dbo:abstract ?abstract ;
-dbo:publicationDate ?publicationDate ;
-dbo:literaryGenre ?literatureGenre ;
-dbo:isbn ?isbn . 
-FILTER (lang(?abstract) = 'en')}`;
-  // If I remove dbp it works on live.dbpedia, dunno why
+dbo:abstract ?abstract .
+FILTER (lang(?abstract) = 'en')
+Optional { <${req.query.resource}> dbo:publicationDate ?publicationDate . }
+Optional { <${req.query.resource}> dbo:premiereDate ?publicationDate . }
+Optional { <${req.query.resource}> dbp:pubDate ?publicationDate . }
+Optional { <${req.query.resource}> dbp:releaseDate ?publicationDate . }
+Optional { <${req.query.resource}> dbo:releaseDate ?publicationDate . }
+Optional { <${req.query.resource}> dbo:literaryGenre ?literaryGenre .
+Optional { ?literaryGenre rdfs:label ?literatureGenre.  } }
+  FILTER(!bound(?literatureGenre) || lang(?literatureGenre) = 'en')
+Optional { <${req.query.resource}> dbo:isbn ?isbn . }
+}`;
 
-  console.log(encodeURIComponent(query));
-  console.log(req.query.resource);
-
+  console.log(query)
   axios
     .get(
       `https://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(
