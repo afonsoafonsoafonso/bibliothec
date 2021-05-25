@@ -112,6 +112,20 @@ app.get('/dbpedia/book/authors', async (req, res) => {
   });
 })
 
+app.get('/dbpedia/book/publisher', async (req, res) => {
+  const query = `SELECT DISTINCT ?obj, ?label
+  WHERE {
+    ?obj rdf:type dbo:Publisher .
+    ?obj rdfs:label ?label .
+    dbr:${req.query.label.split(' ').join('_')} dbo:publisher ?obj .
+  }`
+
+  axios.get(`http://live.dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=${encodeURIComponent(query)}&format=application%2Fsparql-results%2Bjson&timeout=30000&signal_void=on&signal_unconnected=on`)
+  .then((response) => {
+    res.send(response.data);
+  });
+})
+
 // SUBJECT ENDPOINTS
 app.get('/dbpedia/subject/search', async (req, res) => {
   console.log('Request to /dbpedia/search endpoint');

@@ -34,7 +34,21 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      return authorNodesToAdd;
+      const publishers = await axios.get('/dbpedia/book/publisher', {
+        baseURL: 'http://localhost:8000',
+        params: { label: node.label }
+      });
+
+      const publisherNodesToAdd = publishers.data.results.bindings.map((obj) => ({
+        id: obj.obj.value,
+        label: obj.label.value,
+        group: 'Authors',
+        resource: obj.obj.value,
+      }));
+
+      console.log(publishers);
+
+      return [...authorNodesToAdd, ...publisherNodesToAdd];
     }
     case 'Publishers': {
       const books = await axios.get('dbpedia/publisher/books', {
