@@ -95,22 +95,22 @@ class InfoGraphh extends Component {
     };
   }
 
-  handleSelectedNode(node) {
-    const resource = node.resource;
-    const { dispatch } = this.props;
-    dispatch(selectedNodeValue(node.label));
-    switch (this.props.searchOption) {
-      case "Books":
-        dispatch({ type: "BOOK_INFORMATION", payload: resource });
-        break;
-      case "Authors":
-        dispatch({ type: "WRITER_INFORMATION", payload: resource });
-        break;
-      default:
-        break;
-    }
-    dispatch(switchPopup());
-  }
+  // handleSelectedNode(node) {
+  //   const resource = node.resource;
+  //   const { dispatch } = this.props;
+  //   dispatch(selectedNodeValue(node.label));
+  //   switch (this.props.searchOption) {
+  //     case "Books":
+  //       dispatch({ type: "BOOK_INFORMATION", payload: resource });
+  //       break;
+  //     case "Authors":
+  //       dispatch({ type: "WRITER_INFORMATION", payload: resource });
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   dispatch(switchPopup());
+  // }
 
   addNodes() {
     this.setState(({ graph: { nodes, edges }, counter, ...rest }) => {
