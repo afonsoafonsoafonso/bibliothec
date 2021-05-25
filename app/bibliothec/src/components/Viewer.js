@@ -22,6 +22,9 @@ const getRelatedNodes = async (group, node) => {
       return bookNodesToAdd;
     }
     case 'Books': {
+      console.log('IAJDIAWD');
+      console.log(node.label.split(' ').join('_').split('\'').join('\\\''));
+
       const authors = await axios.get('/dbpedia/book/authors', {
         baseURL: 'http://localhost:8000',
         params: { label: node.label }
@@ -140,7 +143,13 @@ const Viewer = (props) => {
   }, [storeState.dbpedia.searchResult]);
 
   return (
-    <div key={graphKey.current} style={{ height: '100vh' }}>
+    <div
+      key={graphKey.current}
+      style={{
+        height: '100vh',
+        backgroundColor: '#FFF7EB',
+      }}
+    >
       <Graph
         graph={ graph }
         options={ options }
