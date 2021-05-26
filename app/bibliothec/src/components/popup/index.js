@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.css";
 import { useDispatch } from "react-redux";
-import { switchPopup } from "../../redux/dbpedia";
+import { switchPopup, loadSparqlInformation } from "../../redux/dbpedia";
 import _ from "lodash";
 
 const Popup = ({ name, infos }) => {
@@ -12,7 +12,10 @@ const Popup = ({ name, infos }) => {
   return (
     <div className="popup-box">
       <div className="box">
-        <span className="close-icon" onClick={() => dispatch(switchPopup())}>
+        <span className="close-icon" onClick={() => {
+          dispatch(loadSparqlInformation(null))
+          dispatch(switchPopup())
+        }}>
           x
         </span>
         <div className="text-content">
