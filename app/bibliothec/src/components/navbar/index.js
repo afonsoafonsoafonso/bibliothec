@@ -4,7 +4,7 @@ import { Nav, NavLink } from "./navbarElements";
 import logo from "../../assets/logo.png";
 import "font-awesome/css/font-awesome.min.css";
 import { searchField } from "../../redux/dbpedia";
-import "./navbar.css"
+import "./navbar.css";
 
 const Navbar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -13,7 +13,12 @@ const Navbar = () => {
   const values = ["Books", "Authors", "Publishers", "Subjects"];
   const searchOption = state.searchOption;
 
-  console.log(searchOption);
+  const dots = [
+    { name: "Authors", color: "#cc0052" },
+    { name: "Publishers", color: "#29a329" },
+    { name: "Books", color: "#005ce6" },
+    { name: "Subjects", color: "#EBEBEB" },
+  ];
 
   const searchHandler = () => {
     console.log("Search Handler", searchOption);
@@ -36,54 +41,65 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <Nav>
-        <NavLink to="/">
-          <img
-            src={logo}
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
-            alt="logo"
-          />
-        </NavLink>
-        <div className="searchArea">
-          <input
-            style={{
-              width: "30vw",
-              border: "none",
-              backgroundColor: "#ebebeb",
-              borderRadius: "15px",
-            }}
-            type="text"
-            value={searchValue}
-            placeholder="Type something"
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-            }}
-          />
-          <select
-            style={{ border: "none" }}
-            onChange={(e) => dispatch(searchField(e.target.value))}
-          >
-            {values.map((item) => {
-              return (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              );
-            })}
-          </select>
-          <i
-            onClick={searchHandler}
-            style={{
-              alignSelf: "center",
-              padding: "5px",
-              color: "#E74845",
-            }}
-            className="fa fa-search"
-          />
-        </div>
-      </Nav>
-    </>
+    <Nav>
+      <NavLink to="/">
+        <img
+          src={logo}
+          style={{ maxWidth: "100%", maxHeight: "100%" }}
+          alt="logo"
+        />
+      </NavLink>
+      <div className="searchArea">
+        <input
+          style={{
+            width: "30vw",
+            border: "none",
+            backgroundColor: "#ebebeb",
+            borderRadius: "15px",
+          }}
+          type="text"
+          value={searchValue}
+          placeholder="Type something"
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+          }}
+        />
+        <select
+          style={{ border: "none" }}
+          onChange={(e) => dispatch(searchField(e.target.value))}
+        >
+          {values.map((item) => {
+            return (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            );
+          })}
+        </select>
+        <i
+          onClick={searchHandler}
+          style={{
+            alignSelf: "center",
+            padding: "5px",
+            color: "#E74845",
+          }}
+          className="fa fa-search"
+        />
+      </div>
+      {dots.map((item) => {
+        return (
+          <div className={"dotArea"}>
+              <span
+                className="dot"
+                style={{
+                  backgroundColor: item.color,
+                }}
+              />
+              {item.name}
+          </div>
+        );
+      })}
+    </Nav>
   );
 };
 

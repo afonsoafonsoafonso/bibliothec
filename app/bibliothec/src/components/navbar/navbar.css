@@ -4,3 +4,16 @@
   background-color: #ebebeb !important;
   border-radius: 15px !important;
 }
+
+.dot {
+  height: 1.5vw;
+  width: 1.5vw;
+  background-color: #cc0052;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotArea {
+  padding-right: 15px;
+  padding-left: 15px;
+}

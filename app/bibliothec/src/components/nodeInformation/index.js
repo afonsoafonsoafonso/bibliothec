@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import "font-awesome/css/font-awesome.min.css";
 import Popup from "../popup";
 
 const NodeInformation = ({ type, name, resourceURL }) => {
-  const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
     return state.dbpedia.nodeInformation ? (

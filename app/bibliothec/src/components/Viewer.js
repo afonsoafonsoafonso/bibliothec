@@ -3,8 +3,8 @@ import InfoGraph from "./graph/InfoGraph";
 import { useSelector, useDispatch } from "react-redux";
 import Graph from "react-graph-vis";
 import axios from "axios";
-import { switchPopup, selectedNodeValue } from "../redux/dbpedia"
-import NodeInformation from "../components/nodeInformation"
+import { switchPopup, selectedNodeValue } from "../redux/dbpedia";
+import NodeInformation from "../components/nodeInformation";
 
 const getRelatedNodes = async (group, node) => {
   switch (group) {
@@ -21,15 +21,15 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      const subjects = await axios.get('dbpedia/writer/subjects', {
-        baseURL: 'http://localhost:8000',
-        params: { label: node.label }
+      const subjects = await axios.get("dbpedia/writer/subjects", {
+        baseURL: "http://localhost:8000",
+        params: { label: node.label },
       });
 
       const subjectNodesToAdd = subjects.data.results.bindings.map((obj) => ({
         id: obj.obj.value,
         label: obj.label.value,
-        group: 'Subjects',
+        group: "Subjects",
         resource: obj.obj.value,
       }));
 
@@ -51,12 +51,12 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      console.log('Now going to fetch publishers');
+      console.log("Now going to fetch publishers");
 
       //TODO: não funciona. ver porquê
-      const publishers = await axios.get('/dbpedia/book/publisher', {
-        baseURL: 'http://localhost:8000',
-        params: { label: node.label }
+      const publishers = await axios.get("/dbpedia/book/publisher", {
+        baseURL: "http://localhost:8000",
+        params: { label: node.label },
       });
 
       const publisherNodesToAdd = publishers.data.results.bindings.map(
@@ -68,24 +68,28 @@ const getRelatedNodes = async (group, node) => {
         })
       );
 
-      console.log('Now going to fetch subjects');
+      console.log("Now going to fetch subjects");
 
-      const subjects = await axios.get('dbpedia/book/subjects', {
-        baseURL: 'http://localhost:8000',
-        params: { label: node.label }
+      const subjects = await axios.get("dbpedia/book/subjects", {
+        baseURL: "http://localhost:8000",
+        params: { label: node.label },
       });
 
       const subjectNodesToAdd = subjects.data.results.bindings.map((obj) => ({
         id: obj.obj.value,
         label: obj.label.value,
-        group: 'Subjects',
+        group: "Subjects",
         resource: obj.obj.value,
       }));
 
-      console.log('BOOK SUBJECTS');
+      console.log("BOOK SUBJECTS");
       console.log(subjects.data);
 
-      return [...authorNodesToAdd, ...publisherNodesToAdd, ...subjectNodesToAdd];
+      return [
+        ...authorNodesToAdd,
+        ...publisherNodesToAdd,
+        ...subjectNodesToAdd,
+      ];
     }
     case "Publishers": {
       const books = await axios.get("dbpedia/publisher/books", {
@@ -103,7 +107,7 @@ const getRelatedNodes = async (group, node) => {
       return bookNodesToAdd;
     }
     case "Subjects": {
-      console.log('DOUBLE CLICK SUBJECT');
+      console.log("DOUBLE CLICK SUBJECT");
 
       const authors = await axios.get("/dbpedia/subject/writers", {
         baseURL: "http://localhost:8000",
@@ -117,22 +121,22 @@ const getRelatedNodes = async (group, node) => {
         resource: obj.obj.value,
       }));
 
-      console.log('authors');
+      console.log("authors");
       console.log(authors.data);
 
-      const books = await axios.get('/dbpedia/subject/books', {
-        baseURL: 'http://localhost:8000',
+      const books = await axios.get("/dbpedia/subject/books", {
+        baseURL: "http://localhost:8000",
         params: { label: node.label },
       });
 
       const bookNodesToAdd = books.data.results.bindings.map((obj) => ({
         id: obj.obj.value,
         label: obj.label.value,
-        group: 'Books',
+        group: "Books",
         resource: obj.obj.value,
       }));
 
-      console.log('books');
+      console.log("books");
       console.log(books.data);
 
       return [...authorNodesToAdd, ...bookNodesToAdd];
@@ -163,10 +167,42 @@ const Viewer = (props) => {
       },
     },
     groups: {
-      Authors: {color:{background:'#cc0052', border:'#b30047', highlight: {background:'#b30047', border:'#99003d'}}, borderWidth:1, shape:'dot'},
-      Publishers: {color:{background:'#29a329', border:'#248f24', highlight: {background:'#248f24', border:'#1f7a1f'}}, borderWidth:1, shape:'dot'},
-      Books: {color:{background:'#005ce6', border:'#0052cc', highlight: {background:'#0052cc', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
-      Subjects: {color:{background:'#EBEBEB', border:'#EBEBEB', highlight: {background:'#EBEBEB', border:'#0047b3'}}, borderWidth:1, shape:'dot'},
+      Authors: {
+        color: {
+          background: "#cc0052",
+          border: "#b30047",
+          highlight: { background: "#b30047", border: "#99003d" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+      Publishers: {
+        color: {
+          background: "#29a329",
+          border: "#248f24",
+          highlight: { background: "#248f24", border: "#1f7a1f" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+      Books: {
+        color: {
+          background: "#005ce6",
+          border: "#0052cc",
+          highlight: { background: "#0052cc", border: "#0047b3" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
+      Subjects: {
+        color: {
+          background: "#EBEBEB",
+          border: "#EBEBEB",
+          highlight: { background: "#EBEBEB", border: "#0047b3" },
+        },
+        borderWidth: 1,
+        shape: "dot",
+      },
     },
     interaction: { multiselect: false, dragView: true },
   };
@@ -181,8 +217,7 @@ const Viewer = (props) => {
   });
 
   const dispatch = useDispatch();
-  const popup = storeState.dbpedia.popup
-
+  const popup = storeState.dbpedia.popup;
 
   function handleSelectedNode(node) {
     const resource = node.resource;
@@ -203,30 +238,49 @@ const Viewer = (props) => {
     }
   }
 
+  var doubleClickTime = 0;
+  var threshold = 200;
+
   const events = {
-    selectNode: ({ nodes}) => {
-      //handleSelectedNode(graph.nodes[nodes]);
-      //console.log("Selected nodes:");
-      //console.log(graph.nodes[nodes]);
+    click: async ({ nodes }) => {
+      if (nodes) {
+        var t0 = performance.now();
+        if (t0 - doubleClickTime > threshold) {
+
+          setTimeout(function () {
+            const node = graph.nodes.filter(
+              (node) => node.id === nodes[0]
+            )[0];
+            if (node) {
+              handleSelectedNode(node);
+              console.log("Selected nodes:");
+              console.log(node);
+            }
+          }, threshold);
+        }
+      }
     },
 
     doubleClick: async ({ nodes }) => {
+      doubleClickTime = performance.now();
       graphKey.current = graphKey.current + 1;
       const node = graph.nodes.filter((node) => node.id === nodes[0])[0];
-      node.x = 0;
-      node.y = 0;
+      if (node) {
+        node.x = 0;
+        node.y = 0;
 
-      setGraph({
-        nodes: [node],
-        edges: [],
-      });
+        setGraph({
+          nodes: [node],
+          edges: [],
+        });
 
-      const nodesToAdd = await getRelatedNodes(node.group, node);
+        const nodesToAdd = await getRelatedNodes(node.group, node);
 
-      setGraph({
-        nodes: [node, ...nodesToAdd],
-        edges: [],
-      });
+        setGraph({
+          nodes: [node, ...nodesToAdd],
+          edges: [],
+        });
+      }
     },
   };
 
@@ -250,9 +304,7 @@ const Viewer = (props) => {
       }}
     >
       <Graph graph={graph} options={options} events={events} />
-      {popup && (
-        <NodeInformation type={"author"} value=""></NodeInformation>
-      )}
+      {popup && <NodeInformation type={"author"} value=""></NodeInformation>}
     </div>
   );
 };
